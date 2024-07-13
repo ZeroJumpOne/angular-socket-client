@@ -1,0 +1,22 @@
+<h1>Mensajes</h1>
+<hr>
+
+<div id="chats">
+   <ul class="list-group">
+      <li *ngFor="let msj of mensajes" class="list-group-item">
+         [{{ msj.de }}] {{ msj.cuerpo }}
+      </li>
+   </ul>
+</div>
+
+<form [formGroup]="frmChat" (ngSubmit)="onEnviar()" autocomplete="off">
+
+   <input
+      type="text"
+      class="form-control chat-input"
+      formControlName="deMsj"
+      placeholder="Mensaje..."
+      autofocus
+   >
+
+</form>
