@@ -1,0 +1,26 @@
+<h1 class="row justify-content-center">Login</h1>
+<hr>
+
+<div class="row justify-content-center">
+   <div class="col-9">
+
+      <form class="p-4" [formGroup]="frmLogin" (ngSubmit)="ingresar()" autocomplete="off">
+
+         <input
+            type="text"
+            name="nombre"
+            class="form-control"
+            formControlName="deNombre"
+            placeholder="Nombre de usuario"
+            autofocus
+         >
+
+         <div class="d-grid">
+            <button class="btn btn-primary margin-top-10" [disabled]="frmLogin.invalid" type="submit" >
+               Ingresar
+            </button>
+         </div>
+      </form>
+
+   </div>
+</div>

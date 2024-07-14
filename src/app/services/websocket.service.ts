@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
+import { Usuario } from '../classes/usuario';
 
 @Injectable({
    providedIn: 'root'
@@ -8,9 +9,15 @@ import { Observable } from 'rxjs';
 export class WebsocketService {
 
    public socketStatus: boolean = false;
+   private usuario?: Usuario;
 
    constructor(private socket: Socket) {
+      this.cargarStorage();
       this.checkStatus();
+   }
+
+   public get user() {
+      return this.usuario;
    }
 
    private checkStatus() {
@@ -28,16 +35,53 @@ export class WebsocketService {
       });
    }
 
-   public emit( evento: string, payload?: any, callback?: Function ) {
+   public emit(evento: string, payload?: any, callback?: Function) {
       console.log('Emitiendo', evento);
 
-
       this.socket.emit(evento, payload, callback);
+   }
+
+   public listen(evento: string): Observable<any> {
+      return this.socket.fromEvent(evento);
 
    }
 
-   public listen( evento: string ): Observable<any> {
-      return this.socket.fromEvent( evento );
+   public loginWS(nombre: string) {
+
+      return new Promise((resolve, reject) => {
+         this.emit('configurar-usuario', { nombre: nombre }, (rsp: any) => {
+
+            this.usuario = new Usuario(nombre);
+            this.guardarStorage();
+            resolve('exito');
+         });
+      })
+
+      // console.log('Configurando', nombre);
+
+
+
+      // this.socket.emit('configurar-usuario', { nombre: nombre }, ( rsp: any ) => {
+      //    console.log(rsp);
+      // });
+   }
+
+   public guardarStorage() {
+      localStorage.setItem('usuario', JSON.stringify(this.usuario));
+   }
+
+   public cargarStorage() {
+      if ( localStorage.getItem('usuario')) {
+         this.usuario = JSON.parse( localStorage.getItem('usuario')! );
+
+         if (this.usuario) {
+            this.loginWS( this.usuario.nombre);
+         }
+      }
 
    }
+
+
+
+
 }
