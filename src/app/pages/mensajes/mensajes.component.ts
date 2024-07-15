@@ -12,4 +12,8 @@ export class MensajesComponent {
       public wsService: WebsocketService,
    ) { }
 
+   public salir() {
+      this.wsService.logoutWS();
+   }
+
 }
